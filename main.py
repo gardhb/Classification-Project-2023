@@ -13,7 +13,7 @@ import scipy.stats as ss
 
 k = 5
 
-data_30 = pd.read_csv('GenreClassData_30s.txt', sep="\t")
+data_30 = pd.read_csv('Classification music/GenreClassData_30s.txt', sep="\t")
 
 selected_features = data_30[['spectral_rolloff_mean', 'mfcc_1_mean', 'spectral_centroid_mean', 'tempo', 'Genre', 'Type']]
 
@@ -56,11 +56,19 @@ while i < len(k_nearest_neighbor_id):
     k_nearest_neighbor_genre.append(y_train_NP[k_nearest_neighbor_id[i]])
     i = i+1
 
+k_nearest_neighbor_genre_df = pd.DataFrame(k_nearest_neighbor_genre)
+
 # Make a prediction of genre
+#genre_prediction = []
+#i = 0
+#while i < len(k_nearest_neighbor_genre):
+#    genre_prediction.append(ss.mode(k_nearest_neighbor_genre[i])[0])
+#    i = i+1
+
 genre_prediction = []
 i = 0
-while i < len(k_nearest_neighbor_genre):
-    genre_prediction.append(ss.mode(k_nearest_neighbor_genre[i])[0])
+while i < len(k_nearest_neighbor_genre_df):
+    genre_prediction.append(k_nearest_neighbor_genre_df.iloc[i].mode().values[0])
     i = i+1
 
 # Create confusion matrix
