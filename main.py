@@ -95,3 +95,43 @@ for i in range(len(tp_tn_fp_fn_matrix[0])):
 # Calculate accuracy and error rate
 result_accuracy = system_tp_tn_fp_fn_matrix[0]/sum_confusion_matrix
 result_error_rate = 1 - result_accuracy
+
+
+# Separate features into genres
+features_pop = training_data[training_data['Genre'] == 'pop']
+features_disco = training_data[training_data['Genre'] == 'disco']
+features_metal = training_data[training_data['Genre'] == 'metal']
+features_classical = training_data[training_data['Genre'] == 'classical']
+
+# Plot histograms
+kwargs = dict(alpha=0.5, bins=100)
+plt.hist(features_pop['spectral_rolloff_mean'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['spectral_rolloff_mean'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['spectral_rolloff_mean'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['spectral_rolloff_mean'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of Spectral Rolloff Mean for pop, disco, metal and classical samples', ylabel='Spectral rolloff mean')
+plt.legend();
+
+kwargs = dict(alpha=0.5, bins=100)
+plt.hist(features_pop['mfcc_1_mean'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['mfcc_1_mean'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['mfcc_1_mean'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['mfcc_1_mean'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of MFCC 1 mean for pop, disco, metal and classical samples', ylabel='MFCC 1 mean')
+plt.legend();
+
+kwargs = dict(alpha=0.5, bins=100)
+plt.hist(features_pop['spectral_centroid_mean'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['spectral_centroid_mean'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['spectral_centroid_mean'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['spectral_centroid_mean'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of Spectral Centroid Mean for pop, disco, metal and classical samples', ylabel='Spectral centroid mean')
+plt.legend();
+
+kwargs = dict(alpha=0.5, bins=100)
+plt.hist(features_pop['tempo'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['tempo'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['tempo'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['tempo'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of Tempo for pop, disco, metal and classical samples', ylabel='Tempo')
+plt.legend();
