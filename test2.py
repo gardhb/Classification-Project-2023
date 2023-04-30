@@ -22,7 +22,7 @@ y_train = training_data['Genre']
 
 X_test = test_data[['spectral_rolloff_mean', 'mfcc_1_mean', 'spectral_centroid_mean', 'tempo']]
 y_test = test_data['Genre']
-
+  
 # Convert datasets into numpy
 X_train_NP = X_train.values
 y_train_NP = y_train.values
