@@ -1,16 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar 24 11:31:58 2023
-
-@author: Gard H. Bakke
-"""
-
 #import csv
 import pandas as pd
 import numpy as np
 import scipy.stats as ss
-from sklearn.metrics import ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+#from sklearn.metrics import confusion_matrix
+
 
 k = 5
 
@@ -58,7 +52,6 @@ while i < len(k_nearest_neighbor_id):
     i = i+1
 
 k_nearest_neighbor_genre_df = pd.DataFrame(k_nearest_neighbor_genre)
-
 # Make a prediction of genre
 #genre_prediction = []
 #i = 0
@@ -79,11 +72,6 @@ confusion_matrix = np.zeros((len(classes), len(classes)))
 for i in range(len(classes)):
     for j in range(len(classes)):
       confusion_matrix[i, j] = np.sum((y_test_NP == classes[i]) & (np.array(genre_prediction).reshape((len(genre_prediction))) == classes[j]))
-
-# Print confusion matrix
-disp = ConfusionMatrixDisplay(confusion_matrix, display_labels=classes)
-disp.plot(cmap=plt.cm.Blues, xticks_rotation='vertical')
-plt.show()
 
 # Compress confusion matrix to find TP, TN, FP and FN for each class
 i = 0
@@ -110,5 +98,47 @@ for i in range(len(tp_tn_fp_fn_matrix[0])):
 result_accuracy = system_tp_tn_fp_fn_matrix[0]/sum_confusion_matrix
 result_error_rate = 1 - result_accuracy
 
-print("Accuracy: ", result_accuracy)
-print("Error rate: ", result_error_rate)
+
+# Separate features into genres
+features_pop = training_data[training_data['Genre'] == 'pop']
+features_disco = training_data[training_data['Genre'] == 'disco']
+features_metal = training_data[training_data['Genre'] == 'metal']
+features_classical = training_data[training_data['Genre'] == 'classical']
+
+# Plot histograms
+
+kwargs = dict(alpha=0.5, bins=10)
+plt.hist(features_pop['spectral_rolloff_mean'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['spectral_rolloff_mean'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['spectral_rolloff_mean'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['spectral_rolloff_mean'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of Spectral Rolloff Mean for pop, disco, metal and classical samples', ylabel='Spectral rolloff mean')
+plt.legend()
+plt.show()
+
+kwargs = dict(alpha=0.5, bins=100)
+plt.hist(features_pop['mfcc_1_mean'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['mfcc_1_mean'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['mfcc_1_mean'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['mfcc_1_mean'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of MFCC 1 mean for pop, disco, metal and classical samples', ylabel='MFCC 1 mean')
+plt.legend()
+plt.show()
+
+kwargs = dict(alpha=0.5, bins=100)
+plt.hist(features_pop['spectral_centroid_mean'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['spectral_centroid_mean'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['spectral_centroid_mean'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['spectral_centroid_mean'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of Spectral Centroid Mean for pop, disco, metal and classical samples', ylabel='Spectral centroid mean')
+plt.legend()
+plt.show()
+
+kwargs = dict(alpha=0.5, bins=100)
+plt.hist(features_pop['tempo'], **kwargs, color='g', label='Pop')
+plt.hist(features_disco['tempo'], **kwargs, color='r', label='Disco')
+plt.hist(features_metal['tempo'], **kwargs, color='y', label='Metal')
+plt.hist(features_classical['tempo'], **kwargs, color='b', label='Classical')
+plt.gca().set(title='Histogram of Tempo for pop, disco, metal and classical samples', ylabel='Tempo')
+plt.legend()
+plt.show()

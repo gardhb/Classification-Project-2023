@@ -1,32 +1,31 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar 24 11:31:58 2023
-
-@author: Gard H. Bakke
-"""
-
-#import csv
 import pandas as pd
 import numpy as np
 import scipy.stats as ss
 from sklearn.metrics import ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-k = 5
+k = 11
 
-data_30 = pd.read_csv('Classification music/GenreClassData_30s.txt', sep="\t")
+# Read both datasets
+data_5s = pd.read_csv('Classification music/GenreClassData_5s.txt', sep='\t')
+data_10s = pd.read_csv('Classification music/GenreClassData_10s.txt', sep='\t')
+data_30s = pd.read_csv('Classification music/GenreClassData_30s.txt', sep='\t')
 
-selected_features = data_30[['spectral_rolloff_mean', 'mfcc_1_mean', 'spectral_centroid_mean', 'tempo', 'Genre', 'Type']]
+# Concatenate the datasets
+combined_data = pd.concat([data_5s,data_10s, data_30s], ignore_index=True)
 
+#selected_features = data_30[['spectral_rolloff_mean', 'mfcc_1_mean', 'spectral_centroid_mean', 'tempo', 'Genre', 'Type']]
+
+selected_features = combined_data.drop('tempo', axis=1)
 # Filter rows based on the 'Type' column
 training_data = selected_features[selected_features['Type'] == 'Train']
 test_data = selected_features[selected_features['Type'] == 'Test']
 
 # Separate features and labels for both training and test datasets
-X_train = training_data[['spectral_rolloff_mean', 'mfcc_1_mean', 'spectral_centroid_mean', 'tempo']]
+X_train = training_data.drop(['Genre', 'Type','Track ID', 'File','GenreID'], axis=1)
 y_train = training_data['Genre']
 
-X_test = test_data[['spectral_rolloff_mean', 'mfcc_1_mean', 'spectral_centroid_mean', 'tempo']]
+X_test = test_data.drop(['Genre', 'Type','Track ID', 'File','GenreID'], axis=1)
 y_test = test_data['Genre']
 
 # Convert datasets into numpy
