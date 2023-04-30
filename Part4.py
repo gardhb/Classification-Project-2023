@@ -59,12 +59,6 @@ while i < len(k_nearest_neighbor_id):
 k_nearest_neighbor_genre_df = pd.DataFrame(k_nearest_neighbor_genre)
 
 # Make a prediction of genre
-#genre_prediction = []
-#i = 0
-#while i < len(k_nearest_neighbor_genre):
-#    genre_prediction.append(ss.mode(k_nearest_neighbor_genre[i])[0])
-#    i = i+1
-
 genre_prediction = []
 i = 0
 while i < len(k_nearest_neighbor_genre_df):
@@ -72,18 +66,30 @@ while i < len(k_nearest_neighbor_genre_df):
     i = i+1
 
 # Create confusion matrix
-i = 0
 classes = np.unique(y_train_NP)
 confusion_matrix = np.zeros((len(classes), len(classes)))
-for i in range(len(classes)):
-    for j in range(len(classes)):
-      confusion_matrix[i, j] = np.sum((y_test_NP == classes[i]) & (np.array(genre_prediction).reshape((len(genre_prediction))) == classes[j]))
+
+# Create a dictionary to map genres to their respective indices
+genre_to_index = {genre: index for index, genre in enumerate(classes)}
+
+# Initialize the confusion matrix
+confusion_matrix = np.zeros((len(classes), len(classes)))
+
+# Iterate through the test dataset and increment the corresponding cell in the confusion matrix for each prediction
+for true_genre, predicted_genre in zip(y_test_NP, genre_prediction):
+    true_index = genre_to_index[true_genre]
+    predicted_index = genre_to_index[predicted_genre]
+    confusion_matrix[true_index, predicted_index] += 1
 
 # Print confusion matrix
 disp = ConfusionMatrixDisplay(confusion_matrix, display_labels=classes)
 disp.plot(cmap=plt.cm.Blues, xticks_rotation='vertical')
 plt.show()
 
+cm = confusion_matrix(y_test_NP, genre_prediction, labels=classes)
+disp = ConfusionMatrixDisplay(cm, display_labels=classes)
+disp.plot(cmap=plt.cm.Blues, xticks_rotation='vertical')
+plt.show()
 # Compress confusion matrix to find TP, TN, FP and FN for each class
 i = 0
 j = 0
